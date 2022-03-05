@@ -1,0 +1,67 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+body{
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+
+}
+
+.containerA{
+    max-width: 700px;
+    width: 100%;
+    background: #FFF;
+    padding: 25px 30px;
+    border-radius: 5px;
+    margin-top: -20px;
+    margin-left: 220px;
+}
+.container .pertama{
+    width: 142px;
+    height: 50px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 40px;
+    margin-left: -200px;
+    background:linear-gradient(135deg, #da8415, #d6340c) ;
+}
+.container .kedua{
+    margin-left: 250px;
+}
+.judul h1{
+    font-family: fantasy;
+    font-size: 100px;
+    color: #FFF;
+}
+
+#putih{
+    color: #FFF;
+    background: #52524f;
+    padding-left: 30px;
+}
+
+.footer{
+    color: #FFF;
+    font-style: italic;
+    text-align: center;
+    height: 50px;
+    padding-top: 60px;
+    padding-bottom: 80px;
+}
+
+.welcome{
+    margin-top: 200px;
+    margin-bottom: 200px;
+}
+.welcome h1{
+    font-weight: bold;
+    font-family: fantasy;
+    font-size: 100px;
+    color: #FFF;
+}

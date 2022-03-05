@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <nav id="putih" class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html">OMI-Line</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="users.html">Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="order.html">Order</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="product.html">Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="stock.html">Stock</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+      <div id="app">
+
+        
+        <div class="container">
+            <div class="judul py-5 text-center">
+              <h1>OMI-LINE</h1>
+              <p>Lebih cepat! Lebih mudah! </p>
+            </div>
+
+            
+            <form>
+              <div class="containerA">
+                <div class="title">
+                 <h3> Information Product</h3></div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="productCategory">Product Category</label>
+                    <input v-model="productCategory" type="text" class="form-control" id="productCategory" placeholder="" value="" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="productTitle">Product Title</label>
+                    <input v-model="productTitle" type="text" class="form-control" id="productTitle" placeholder="" value="" >
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="productPrice">Product Price</label>
+                  <input v-model="productPrice" type="text" class="form-control" id="productPrice" placeholder="" value="" >
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="productDesc">Product Desc</label>
+                  <textarea v-model="productDesc" type="text" class="form-control" id="productDesc" placeholder="" value="" ></textarea>
+                </div>            
+              </div>
+              <!-- message -->
+              <br>
+            </form>
+
+           <div class="container">
+              <div class="row">
+                <div class="kedua col">
+                  <hr class="mb-4 ">
+                  <button v-if="!editMode && !deleteMode" v-on:click="createProduct"   class="btn btn-primary btn-lg btn-block" type="submit">Submit Data</button>
+                  <button v-if="editMode" v-on:click="updateProduct" class="btn btn-warning btn-lg btn-block" type="submit">Update Data</button>
+                  <button v-if="deleteMode" v-on:click="deleteProduct" class="btn btn-danger btn-lg btn-block" type="submit">Delete Data</button>
+                </div>
+                <div class="col">
+                   <!-- message -->
+                <button class="pertama btn btn-md btn-primary" v-on:click="resetForm()"><h5>Reset</h5> </button>
+                </div>
+              </div>
+            </div> 
+            <br>
+            <div v-if="message" class="alert alert-success" role="alert">
+              {{ message }}
+            </div> 
+
+            <!-- tabble -->
+            <br><br><br>
+            <h2 class="mb-3">Product Data 
+            </h2>
+            <table class="table table-striped">
+              <tr>
+                  <th>Product Category</th>
+                  <th>Product Title</th>
+                  <th>Product Price</th>
+                  <th>Product Desc</th> 
+                  <th>Edit</th>
+                  <th>Delete</th>
+              </tr>
+              <tr v-for="product in products">
+                  <td>{{ product.productCategory }}</td>
+                  <td>{{ product.productTitle }}</td>
+                  <td>{{ product.productPrice }}</td>
+                  <td>{{ product.productDesc }}</td>
+                  <td><button class="btn btn-md btn-warning" v-on:click="getEdit(product)">Edit</button></td>
+                  <td><button class="btn btn-danger" v-on:click="getDelete(product)">Delete</button></td>
+              </li>
+            </table>
+            
+
+            <!-- footer -->
+
+            <div class="footer">
+              <p>@AnwarKorneleusManulang </p>
+            </div>
+
+          </div>
+                
+          </div>
+        </div>
+
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+          
+      <script>
+         var app = new Vue ({
+            el: '#app',
+            data: {
+                errors: [],
+                message: null,
+                products:[],  
+                productIdEdit: null,
+                productIdDelete: null,
+                editMode: false,
+                deleteMode: false,
+                productId:'',
+                productTitle: '',
+                productPrice: '',
+                productDesc: '',
+            },
+            mounted: function() {
+                this.getProduct();
+            },
+            methods: {
+                getProduct() {
+                    axios.get('https://621a327a81d4074e85bbf6a8.mockapi.io/products')
+                        .then(response => {
+                          this.products = response.data;
+                            console.log(response);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+            createProduct: function(){
+              axios.post('https://621a327a81d4074e85bbf6a8.mockapi.io/products',{
+                productCategory: this.productCategory,
+                productTitle: this.productTitle,
+                productPrice: this.productPrice,
+                productDesc: this.productDesc,
+              })
+              .then(response => {
+                  this.getProduct();
+                  this.message = "Your data has been submitted";
+                  console.log(response);
+              })
+              .catch(error => {
+                 console.log(error);
+              });
+            },
+            resetForm: function (){
+              this.message = null;
+              this.editMode = false;
+              this.deleteMode = false;
+              this.userIdEdit = null;
+              this.productCategory = null;
+              this.productTitle = null;
+              this.productPrice = null;
+              this.productDesc = null;
+            },
+            getEdit: function (product){
+              this.message = null;
+              this.editMode = true;
+              this.deleteMode= false;
+              this.productIdEdit = product.productId;
+              this.productCategory = product.productCategory;
+              this.productTitle = product.productTitle;
+              this.productPrice = product.productPrice;
+              this.productDesc = product.productDesc;
+            },
+            getDelete: function (product) {
+              this.message = null;
+              this.deleteMode = true;
+              this.editMode = false;
+              this.productIdDelete = product.productId;
+              this.productCategory = product.productCategory;
+              this.productTitle = product.productTitle;
+              this.productPrice = product.productPrice;
+              this.productDesc = product.productDesc;
+            },
+            updateProduct: function(){
+              axios.put(`https://621a327a81d4074e85bbf6a8.mockapi.io/products/${this.productIdEdit}` , {
+                productCategory: this.productCategory,
+                productTitle: this.productTitle,
+                productPrice: this.productPrice,
+                productDesc: this.productDesc,
+              })
+              .then(res => {
+                this.message = "Your data has been updated";
+                this.getProduct(); 
+              })
+              .catch(err => {
+                console.log(err);
+              })
+            
+            },
+            deleteProduct: function(){
+              axios.delete(`https://621a327a81d4074e85bbf6a8.mockapi.io/products/${this.productIdDelete}`)
+              .then(res => {
+                this.message = "Your data has been deleted";
+                this.getProduct();
+              })
+              .catch(err =>{
+                console.log(err);
+              })
+            }
+          }
+
+        })
+      </script>
+</body>
+</html>
